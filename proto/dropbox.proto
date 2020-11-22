@@ -1,0 +1,41 @@
+syntax = "proto3";
+package pexip;
+option go_package = "github.com/khannz/pdb/proto";
+
+service Dropbox {
+  rpc SayDiff(DiffRequest) returns (DiffResponse) {}
+
+  // Upload uploads file
+  rpc Upload(stream Chunk) returns (UploadStatus) {}
+}
+
+message DiffRequest {
+  repeated File files = 1;
+}
+
+message File {
+  string path = 1;
+  string mode = 2;
+  string checksum = 3;
+//  map<string, string> FileInfo = 1;
+}
+
+message DiffResponse {
+  map<string, bytes> file = 1;
+}
+
+message Chunk {
+  bytes Content = 1;
+}
+
+enum UploadStatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Failed = 2;
+}
+
+message UploadStatus {
+  string message = 1;
+  UploadStatusCode code = 2;
+  int32 elapsed_time = 3;
+}
